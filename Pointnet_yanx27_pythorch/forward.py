@@ -10,7 +10,7 @@ if __name__ == '__main__':
     model_name = 'pointnet_sem_seg'
     MODEL = importlib.import_module(model_name)
     classifier = MODEL.get_model(NUM_CLASSES)
-    checkpoint = torch.load('/home/joao/dev/Pointnet_Pointnet2_pytorch/log/sem_seg/'+ model_name + '/checkpoints/best_model.pth', weights_only=False, map_location=torch.device('cpu'))
+    checkpoint = torch.load('/home/joao/dev/LidarSegmentation/Pointnet_yanx27_pythorch/log/sem_seg/'+ model_name + '/checkpoints/best_model.pth', weights_only=False, map_location=torch.device('cpu'))
     classifier.load_state_dict(checkpoint['model_state_dict'])
     pc = np.zeros((1, 4096, 9))  # 1 sample, 4096 points, 9 features
     color = np.load('/home/joao/dev/datasets/s3dis/'+ area + '/' + room +'/color.npy')
@@ -40,27 +40,25 @@ if __name__ == '__main__':
     pc = np.concatenate((coord_centered, color_normalized, coord_normalized), axis=1)
     print(f"Max color {np.max(color_normalized)}")
     print(f"pc:{pc.shape}")
+    pc_aux = pc.transpose(1,0)
+    
     colors_segmentation = np.array([ 
         [255, 0, 0],       # 0 - ceiling      - red
         [0, 255, 0],       # 1 - floor        - green
         [0, 0, 255],       # 2 - wall         - blue
-        [255, 255, 0],     # 3 - beam         - yellow
-        [255, 0, 255],     # 4 - column       - magenta
-        [0, 255, 255],     # 5 - window       - cyan
-        [192, 192, 192],   # 6 - door         - light gray
-        [128, 128, 128],   # 7 - table        - gray
-        [128, 0, 0],       # 8 - chair        - maroon
-        [128, 128, 0],     # 9 - sofa         - olive
-        [0, 128, 0],       # 10 - bookcase    - dark green
-        [128, 0, 128],     # 11 - board       - purple
+        [0, 0, 0],#[255, 255, 0],     # 3 - beam         - yellow
+        [0, 0, 0],#[255, 0, 255],     # 4 - column       - magenta
+        [0, 0, 0],#[0, 255, 255],     # 5 - window       - cyan
+        [0, 0, 0],#[192, 192, 192],   # 6 - door         - light gray
+        [0, 0, 0],#[128, 128, 128],   # 7 - table        - gray
+        [0, 0, 0],#[128, 0, 0],       # 8 - chair        - maroon
+        [0, 0, 0],#[128, 128, 0],     # 9 - sofa         - olive
+        [0, 0, 0],#[0, 128, 0],       # 10 - bookcase    - dark green
+        [0, 0, 0],#[128, 0, 128],     # 11 - board       - purple
         [0, 0, 0]          # 12 - clutter     - black
-    ])
+    ]) / 255.0
 
-    colors_segmentation = colors_segmentation / 255.0
-    num_points = 4096
-    random_indices = np.random.choice(pc.shape[0], num_points, replace=False)
-    pc_sampled = pc[random_indices]
-    pc_aux = pc_sampled.transpose(1,0)
+
     pc_tensor = torch.tensor(pc_aux).float().unsqueeze(0)
     print(f"torch tensor shape: {pc_tensor.shape}")
     classifier = classifier.eval()
@@ -78,7 +76,7 @@ if __name__ == '__main__':
     #print(np.max(segment))
     
     point_cloud = o3d.geometry.PointCloud()
-    pc_sampled_coords = pc_sampled[:, :3]
+    pc_sampled_coords = pc[:, :3]
     print(f"coord shape: {coord.shape}")
     print(f"pc sampled coords shape: {pc_sampled_coords.shape}")
     print(f"colors shape: {colors_segmentation[0].shape}")
