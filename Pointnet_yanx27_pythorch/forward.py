@@ -7,10 +7,11 @@ if __name__ == '__main__':
     NUM_CLASSES = 13
     area = "Area_3"
     room = "office_1"
+    base_path = os.path.dirname(__file__)
     model_name = 'pointnet_sem_seg'
     MODEL = importlib.import_module(model_name)
     classifier = MODEL.get_model(NUM_CLASSES)
-    checkpoint = torch.load('/home/joao/dev/LidarSegmentation/Pointnet_yanx27_pythorch/log/sem_seg/'+ model_name + '/checkpoints/best_model.pth', weights_only=False, map_location=torch.device('cpu'))
+    checkpoint = torch.load(base_path + '/log/sem_seg/'+ model_name + '/checkpoints/best_model.pth', weights_only=False, map_location=torch.device('cpu'))
     classifier.load_state_dict(checkpoint['model_state_dict'])
     pc = np.zeros((1, 4096, 9))  # 1 sample, 4096 points, 9 features
     color = np.load('/home/joao/dev/datasets/s3dis/'+ area + '/' + room +'/color.npy')
