@@ -33,7 +33,7 @@ from kernels.kernel_points import create_3D_rotations
 
 # Subsampling extension
 import cpp_wrappers.cpp_subsampling.grid_subsampling as cpp_subsampling
-import cpp_wrappers.cpp_neighbors.radius_neighbors as cpp_neighbors
+import cpp_wrappers.cpp_neighbors.neighbors as cpp_neighbors
 
 # ----------------------------------------------------------------------------------------------------------------------
 #

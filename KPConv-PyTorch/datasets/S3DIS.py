@@ -22,6 +22,7 @@
 #       \**********************************/
 #
 
+# https://cvg-data.inf.ethz.ch/s3dis/&sa=D&source=editors&ust=1748441236733871
 # Common libs
 import time
 import numpy as np
@@ -86,7 +87,7 @@ class S3DISDataset(PointCloudDataset):
         self.ignored_labels = np.array([])
 
         # Dataset folder
-        self.path = '../../Data/S3DIS'
+        self.path = '/home/joao/dev/datasets/s3dis'
 
         # Type of task conducted on this dataset
         self.dataset_task = 'cloud_segmentation'
